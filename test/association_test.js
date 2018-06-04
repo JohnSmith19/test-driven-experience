@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const assert = require("assert");
 const User = require("../src/user");
 const Comment = require("../src/comment");
 const BlogPost = require("../src/blogPost");
@@ -23,10 +24,12 @@ describe("Assocations", () => {
     );
   });
 
-  it.only("saves a relation between a user and a blogpost", done => {
-    User.findOne({ name: "Joe" }).then(user => {
-      console.log(user);
-      done();
-    });
+  it("saves a relation between a user and a blogpost", done => {
+    User.findOne({ name: "Joe" })
+      .populate("blogPosts")
+      .then(user => {
+        assert(user.blogPosts[0].title === "JS is Great");
+        done();
+      });
   });
 });
