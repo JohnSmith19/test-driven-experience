@@ -13,14 +13,21 @@ const UserSchema = new Schema({
   },
   posts: [PostSchema],
   likes: Number,
-  blogPosts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'blogPost'
-  }]
+  blogPosts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "blogPost"
+    }
+  ]
 });
 
 UserSchema.virtual("postCount").get(function() {
   return this.posts.length;
+});
+
+UserSchema.pre("remove", function() {
+  const BlogPost = mongoose.model("blogPost");
+  // this === joe
 });
 
 const User = mongoose.model("user", UserSchema);
